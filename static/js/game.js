@@ -4,6 +4,12 @@ function rollDice() {
     .then((data) => {
       const output = document.getElementById("game-output");
       output.innerHTML = data.message;
+      // update image
+      const diceImage = document.getElementById("dice-image");
+      const diceRoll = data.message.match(/rolled a (\d)/);
+      if (diceRoll) {
+        diceImage.src = `static/img/inverted-dice-${diceRoll[1]}.png`;
+      }
     })
     .catch((error) => console.error("Error", error));
 }

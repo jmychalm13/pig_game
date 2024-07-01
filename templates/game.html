@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <title>Pig Game</title>
 </head>
 <body>
@@ -11,9 +12,11 @@
   <div id="game-status">
     <!-- TODO: display game status messages -->
   </div>
+  <img class="dice" id="dice-image" src="{{ url_for('static', filename='img/inverted-dice-1.png') }}" alt="Dice" width="100">
 
   <button type="button" id="roll-button">Roll Dice</button>
   <button type="button" id="end-turn-button">End Turn</button>
+
 
   <div id="game-output">
     <!-- todo: game output -->
