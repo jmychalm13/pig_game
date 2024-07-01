@@ -1,30 +1,35 @@
-function rollDice() {
-  fetch("/roll-dice", { method: "POST" })
-    .then((response) => response.json())
-    .then((data) => {
-      const output = document.getElementById("game-output");
-      output.innerHTML = data.message;
-      // update image
-      const diceImage = document.getElementById("dice-image");
-      const diceRoll = data.message.match(/rolled a (\d)/);
-      if (diceRoll) {
-        diceImage.src = `static/img/inverted-dice-${diceRoll[1]}.png`;
-      }
-    })
-    .catch((error) => console.error("Error", error));
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const rollButton = document.getElementById("roll-button");
+  const endTurnButton = document.getElementById("end-turn-button");
+  const gameStatus = document.getElementById("game-status");
+  const gameOutput = document.getElementById("game-output");
+  const diceImage = document.getElementById("dice-image");
 
-function endTurn() {
-  fetch("/end-turn", { method: "POST" })
-    .then((response) => response.json())
-    .then((data) => {
-      const output = document.getElementById("game-output");
-      output.innerHTML = data.message;
-    })
-    .catch((error) => console.error("Error:", error));
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("roll-button").addEventListener("click", rollDice);
-  document.getElementById("end-turn-button").addEventListener("click", endTurn);
+  rollButton.addEventListener("click", () => {
+    fetch("/roll-dice", { method: "POST" })
+      .then((response) => response.json())
+      .then((data) => {
+        gameOutput.textContent = `You rolled a ${data.value}`;
+        if (data.value === 1) {
+          gameStatus.textContent = `You rolled a 1! Turn done! Current score: 0`;
+        } else {
+          gameStatus.textContent = `Current score: ${data.current_score}`;
+        }
+        diceImage.src = `/static/img/inverted-dice-${data.value}.png`;
+      });
+  });
+  endTurnButton.addEventListener("click", () => {
+    fetch("/end-turn", { method: "POST" })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.winner) {
+          gameStatus.textContent = `Player ${data.winner} wins with a score of ${data.score}!`;
+          rollButton.disabled = true;
+          endTurnButton.disabled = true;
+        } else {
+          gameStatus.textContent = `Next player: ${data.next_player}`;
+          gameOutput.textContent = "";
+        }
+      });
+  });
 });

@@ -1,50 +1,46 @@
-from flask import Flask, jsonify, render_template, request, redirect, url_for, session
-from pig import initialize_game, roll_dice, end_turn
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+import pig
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey"
+app.secret_key = 'your_secret_key'
 
-@app.route("/")
+@app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template('index.html')
 
-@app.route("/start-game", methods=["POST"])
+@app.route('/start-game', methods=['POST'])
 def start_game():
-    players = request.form.get("players")
-    if players is None:
-        return jsonify(error="Missing 'players' parameter"), 400
-    try:
-        players = int(players)
-    except ValueError:
-        return jsonify(error="Invalid 'players' parameter, must be an integer"), 400
-    # initialize game state
-    session["game_state"] = initialize_game(players)
+    players = int(request.form['players'])
+    state = pig.start_game(players)
+    session['game_state'] = state
+    return redirect(url_for('game'))
 
-    return redirect(url_for("game"))
-
-@app.route("/game")
+@app.route('/game')
 def game():
-    if "game_state" not in session:
-        return redirect(url_for("index"))
-    
-    players = session["game_state"]["players"]
-    return render_template("game.html", players=players)
+    state = session.get('game_state', None)
+    if not state:
+        return redirect(url_for('index'))
+    return render_template('game.html', state=state)
 
-@app.route("/roll-dice", methods=["POST"])
-def roll_dice_route():
-    if "game_state" not in session:
-        return jsonify(error="Game not started"), 400
-    
-    message, session["game_state"] = roll_dice(session["game_state"])
-    return jsonify(message=message)
+@app.route('/roll-dice', methods=['POST'])
+def roll_dice():
+    state = session.get('game_state', None)
+    if not state:
+        return jsonify({'error': 'Game state not found'}), 400
+    state, value = pig.roll_dice(state)
+    session['game_state'] = state
+    return jsonify({'value': value, 'current_score': state['current_score']})
 
-@app.route("/end-turn", methods=["POST"])
-def end_turn_route():
-    if "game_state" not in session:
-        return jsonify(error="Game not started"), 400
-    
-    message, session["game_state"] = end_turn(session["game_state"])
-    return jsonify(message=message)
+@app.route('/end-turn', methods=['POST'])
+def end_turn():
+    state = session.get('game_state', None)
+    if not state:
+        return jsonify({'error': 'Game state not found'}), 400
+    state = pig.end_turn(state)
+    session['game_state'] = state
+    if 'winner' in state:
+        return jsonify({'winner': state['winner'], 'score': state['scores'][state['winner'] - 1]})
+    return jsonify({'next_player': state['current_player'] + 1, 'scores': state['scores']})
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
