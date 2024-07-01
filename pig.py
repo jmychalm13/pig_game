@@ -1,46 +1,41 @@
 import random
 
-
 def roll():
-    min_value = 1
-    max_value = 6
-    roll = random.randint(min_value, max_value)
+    return random.randint(1, 6)
 
-    return roll
+def initialize_game(players):
+    return {
+        "players": players,
+        "player_scores": [0] * players,
+        "current_player": 0,
+        "current_score": 0
+    }
 
-def play_turn(player_idx, player_scores):
-    # simulates single turn for single player
-    print(f"Player {player_idx + 1}'s turn.")
-    print(f"Your total score is: {player_scores[player_idx]}")
+def roll_dice(game_state):
+    value = roll()
+    if value == 1:
+        game_state["current_score"] = 0
+        next_turn(game_state)
+        return "You rolled a 1! Turn done!", game_state
+    else:
+        game_state["current_score"] += value
+        return f"You rolled a {value}. Your score this turn is {game_state["current_score"]}", game_state
+    
+def next_turn(game_state):
+    game_state["player_scores"][game_state["current_player"]] += game_state["current_score"]
+    game_state["current_player"] = (game_state["current_player"] + 1) % game_state["players"]
+    game_state["current_score"] = 0
 
-    current_score = 0
-    while True:
-        should_roll = input("Would you like to roll? (y/n): ").lower()
-        if should_roll != "y":
-            break
-        value = roll()
-        if value == 1:
-            print("You rolled a 1! Turn done!")
-            current_score = 0
-            break
-        else:
-            current_score += value
-            print(f"You rolled a: {value}")
-            print(f"Your score for this turn is: {current_score}")
-    player_scores[player_idx] += current_score
-    print(f"Your total score is now: {player_scores[player_idx]}")
+def end_turn(game_state):
+    player_scores = game_state["player_scores"]
+    current_player = game_state["current_player"]
+    current_score = game_state["current_score"]
 
-def play_game(players):
-    max_score = 50
-    player_scores = [0] * players
+    player_scores[current_player] += current_score
+    game_state["player_scores"] = player_scores
 
-    while max(player_scores) < max_score:
-        for player_idx in range(players):
-            play_turn(player_idx, player_scores)
-    winning_score = max(player_scores)
-    winning_player = player_scores.index(winning_score) + 1
-    print(f"Player {winning_player} wins with a score of {winning_score}!")
-
-if __name__ == "__main__":
-    players = int(input("Enter the number of players (2-4): "))
-    play_game(players)
+    if max(player_scores) >= 50:
+        return f"Player {current_player + 1} wins with a score of {player_scores[current_player]}!", game_state
+    
+    next_turn(game_state)
+    return f"Turn ended.  Player {current_player + 1} total score is {player_scores[current_player]}", game_state
