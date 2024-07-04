@@ -9,9 +9,9 @@
 <body>
   <h1>Pig Game</h1>
   <p>Number of players: {{ state['players'] }}</p>
-  <p>Current player: {{ state['current_player'] + 1 }}</p>
+  <p>Current player: <span id="current-player">{{ state['current_player'] + 1 }}</span></p>
   <div id="game-status"></div>
-  <img id="dice-image" src="{{ url_for('static', filename='img/dice1.png') }}" alt="Dice" width="100">
+  <img class="dice" id="dice-image" src="{{ url_for('static', filename='img/inverted-dice-1.png') }}" alt="Dice" width="100">
   <button id="roll-button">Roll Dice</button>
   <button id="end-turn-button">End Turn</button>
   <div id="game-output"></div>

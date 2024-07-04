@@ -4,20 +4,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const gameStatus = document.getElementById("game-status");
   const gameOutput = document.getElementById("game-output");
   const diceImage = document.getElementById("dice-image");
+  const currentPlayerDisplay = document.getElementById("current-player");
 
   rollButton.addEventListener("click", () => {
     fetch("/roll-dice", { method: "POST" })
       .then((response) => response.json())
       .then((data) => {
         gameOutput.textContent = `You rolled a ${data.value}`;
-        if (data.value === 1) {
+        if (data.value == 1) {
           gameStatus.textContent = `You rolled a 1! Turn done! Current score: 0`;
         } else {
           gameStatus.textContent = `Current score: ${data.current_score}`;
         }
-        diceImage.src = `/static/img/inverted-dice-${data.value}.png`;
+        diceImage.src = `static/img/inverted-dice-${data.value}.png`;
       });
   });
+
   endTurnButton.addEventListener("click", () => {
     fetch("/end-turn", { method: "POST" })
       .then((response) => response.json())
@@ -29,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           gameStatus.textContent = `Next player: ${data.next_player}`;
           gameOutput.textContent = "";
+          currentPlayerDisplay.textContent = data.next_player;
         }
       });
   });
