@@ -11,12 +11,15 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((response) => response.json())
       .then((data) => {
         gameOutput.textContent = `You rolled a ${data.value}`;
-        if (data.value == 1) {
+        if (data.value === 1) {
           gameStatus.textContent = `You rolled a 1! Turn done! Current score: 0`;
         } else {
           gameStatus.textContent = `Current score: ${data.current_score}`;
         }
-        diceImage.src = `static/img/inverted-dice-${data.value}.png`;
+        diceImage.src = `/static/img/inverted-dice-${data.value}.png`;
+      })
+      .catch((error) => {
+        console.error("Error", error);
       });
   });
 
@@ -29,10 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
           rollButton.disabled = true;
           endTurnButton.disabled = true;
         } else {
+          console.log("triggered");
           gameStatus.textContent = `Next player: ${data.next_player}`;
+          console.log(data.next_player);
           gameOutput.textContent = "";
-          currentPlayerDisplay.textContent = data.next_player;
+          currentPlayerDisplay.textContent = `${data.next_player}`;
         }
+      })
+      .catch((error) => {
+        console.error("Error", error);
       });
   });
 });
