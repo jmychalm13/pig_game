@@ -15,6 +15,7 @@ def start_game(players):
         'scores': [0] * players,
         'current_player': 0,
         'current_score': 0
+        # add winner to fix the game crashing issue
     }
 
 def roll_dice(state):
@@ -61,7 +62,7 @@ def roll_dice_route():
         return jsonify({'error': 'Game state not found'}), 400
     state, value = roll_dice(state)
     session['game_state'] = state
-    return jsonify({'value': value, 'current_score': state['current_score'], 'current_player': state['current_player']})
+    return jsonify({'value': value, 'current_score': state['current_score'], 'current_player': state['current_player'], 'scores': state['scores']})
 
 @app.route('/end-turn', methods=['POST'])
 def end_turn_route():

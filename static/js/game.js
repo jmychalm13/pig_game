@@ -6,6 +6,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const diceImage = document.getElementById("dice-image");
   const currentPlayerDisplay = document.getElementById("current-player");
 
+  function updatePlayerScores(scores) {
+    for (let i = 0; i < scores.length; i++) {
+      const playerScoreElement = document.getElementById(`player${i + 1}-score`);
+      if (playerScoreElement) {
+        playerScoreElement.textContent = scores[i];
+      }
+    }
+    // console.log(scores);
+  }
+
   rollButton.addEventListener("click", () => {
     fetch("/roll-dice", { method: "POST" })
       .then((response) => response.json())
@@ -13,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.value === 1) {
           gameStatus.textContent = `You rolled a 1!`;
           rollButton.disabled = true;
-
           endTurnButton.disabled = false;
         } else {
           gameStatus.textContent = `You rolled a ${data.value}`;
@@ -41,6 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
           endTurnButton.disabled = false;
           currentPlayerDisplay.textContent = data.current_player + 1;
           currentPlayerScore.textContent = `0`;
+          updatePlayerScores(data.scores);
         }
       })
       .catch((error) => {
