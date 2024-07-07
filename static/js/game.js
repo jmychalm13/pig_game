@@ -40,11 +40,12 @@ document.addEventListener("DOMContentLoaded", () => {
     fetch("/end-turn", { method: "POST" })
       .then((response) => response.json())
       .then((data) => {
-        if (data.winner) {
+        if (data.winner !== undefined && data.winner !== null) {
           gameStatus.textContent = `Player ${data.winner + 1} wins with a score of ${data.score}!`;
           rollButton.disabled = true;
           endTurnButton.disabled = true;
         } else {
+          console.log(data);
           gameStatus.textContent = `Next player: Player ${data.next_player + 1}`;
           rollButton.disabled = false;
           endTurnButton.disabled = false;

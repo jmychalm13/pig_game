@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import random
 
-MAX_SCORE = 50
+MAX_SCORE = 25
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -14,8 +14,8 @@ def start_game(players):
         'players': players,
         'scores': [0] * players,
         'current_player': 0,
-        'current_score': 0
-        # add winner to fix the game crashing issue
+        'current_score': 0,
+        'winner': None
     }
 
 def roll_dice(state):
@@ -33,6 +33,7 @@ def end_turn(state):
     state["current_score"] = 0
     if state["scores"][state["current_player"]] >= MAX_SCORE:
         state["winner"] = state["current_player"] + 1
+        return state
     else:
         state["current_player"] = (state["current_player"] + 1) % state["players"]
         return state
@@ -74,12 +75,12 @@ def end_turn_route():
         state = end_turn(state)
         session["game_state"] = state
 
-        if "winner" in state:
-            return jsonify({"winner": state["winner"], "score": state["scores"][state["winner"] - 1]})
+        if "winner" in state and state["winner"] is not None:
+            return jsonify({"winner": state["winner"], "score": state["scores"][state["winner"] - 1], "scores": state["scores"]})
         else:
             next_player = (state["current_player"] + 1) % state["players"]
             print(f"current_player: {state['current_player']} next_player: {next_player}")
-            return jsonify({"current_player": state["current_player"], "next_player": next_player, "scores": state["scores"]})
+            return jsonify({"current_player": state["current_player"], "next_player": next_player, "scores": state["scores"], "winner": None})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
