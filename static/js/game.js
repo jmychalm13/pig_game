@@ -10,13 +10,15 @@ document.addEventListener("DOMContentLoaded", () => {
     fetch("/roll-dice", { method: "POST" })
       .then((response) => response.json())
       .then((data) => {
-        gameOutput.textContent = `You rolled a ${data.value}`;
         if (data.value === 1) {
-          gameStatus.textContent = `You rolled a 1! Turn done! Current score: 0`;
+          gameStatus.textContent = `You rolled a 1!`;
+          rollButton.disabled = true;
+
+          endTurnButton.disabled = false;
         } else {
-          gameStatus.textContent = `Current score: ${data.current_score}`;
+          gameStatus.textContent = `You rolled a ${data.value}`;
+          currentPlayerDisplay.textContent = `Current Player: ${data.current_player + 1}`;
         }
-        diceImage.src = `/static/img/inverted-dice-${data.value}.png`;
       })
       .catch((error) => {
         console.error("Error", error);
@@ -28,15 +30,14 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.winner) {
-          gameStatus.textContent = `Player ${data.winner} wins with a score of ${data.score}!`;
+          gameStatus.textContent = `Player ${data.winner + 1} wins with a score of ${data.score}!`;
           rollButton.disabled = true;
           endTurnButton.disabled = true;
         } else {
-          console.log("triggered");
-          gameStatus.textContent = `Next player: ${data.next_player}`;
-          console.log(data.next_player);
-          gameOutput.textContent = "";
-          currentPlayerDisplay.textContent = `${data.next_player}`;
+          gameStatus.textContent = `Next player: Player ${data.next_player + 1}`;
+          rollButton.disabled = false;
+          endTurnButton.disabled = false;
+          currentPlayerDisplay.textContent = `Current Player: Player ${data.current_player + 1}`;
         }
       })
       .catch((error) => {

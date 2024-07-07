@@ -10,6 +10,7 @@
   <h1>Pig Game</h1>
   <p>Number of players: {{ state['players'] }}</p>
   <p>Current player: <span id="current-player">{{ state['current_player'] + 1 }}</span></p>
+  <p>Current player score: <span id="current-player-score">{{ state['current_score'] }}</span></p>
   <div id="game-status"></div>
   <img class="dice" id="dice-image" src="{{ url_for('static', filename='img/inverted-dice-1.png') }}" alt="Dice" width="100">
   <button id="roll-button">Roll Dice</button>

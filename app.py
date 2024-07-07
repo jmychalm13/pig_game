@@ -76,7 +76,9 @@ def end_turn_route():
         if "winner" in state:
             return jsonify({"winner": state["winner"], "score": state["scores"][state["winner"] - 1]})
         else:
-            return jsonify({"next_player": state["current_player"] + 1, "scores": state["scores"]})
+            next_player = (state["current_player"] + 1) % state["players"]
+            print(f"current_player: {state['current_player']} next_player: {next_player}")
+            return jsonify({"current_player": state["current_player"], "next_player": next_player, "scores": state["scores"]})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
