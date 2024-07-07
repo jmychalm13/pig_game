@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const rollButton = document.getElementById("roll-button");
   const endTurnButton = document.getElementById("end-turn-button");
   const gameStatus = document.getElementById("game-status");
-  const gameOutput = document.getElementById("game-output");
+  const currentPlayerScore = document.getElementById("current-player-score");
   const diceImage = document.getElementById("dice-image");
   const currentPlayerDisplay = document.getElementById("current-player");
 
@@ -17,7 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
           endTurnButton.disabled = false;
         } else {
           gameStatus.textContent = `You rolled a ${data.value}`;
-          currentPlayerDisplay.textContent = `Current Player: ${data.current_player + 1}`;
+          currentPlayerScore.textContent = data.current_score;
+          diceImage.src = `/static/img/inverted-dice-${data.value}.png`;
+          currentPlayerDisplay.textContent = data.current_player + 1;
         }
       })
       .catch((error) => {
@@ -37,7 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
           gameStatus.textContent = `Next player: Player ${data.next_player + 1}`;
           rollButton.disabled = false;
           endTurnButton.disabled = false;
-          currentPlayerDisplay.textContent = `Current Player: Player ${data.current_player + 1}`;
+          currentPlayerDisplay.textContent = data.current_player + 1;
+          currentPlayerScore.textContent = `0`;
         }
       })
       .catch((error) => {

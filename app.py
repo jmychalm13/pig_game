@@ -61,7 +61,7 @@ def roll_dice_route():
         return jsonify({'error': 'Game state not found'}), 400
     state, value = roll_dice(state)
     session['game_state'] = state
-    return jsonify({'value': value, 'current_score': state['current_score']})
+    return jsonify({'value': value, 'current_score': state['current_score'], 'current_player': state['current_player']})
 
 @app.route('/end-turn', methods=['POST'])
 def end_turn_route():
