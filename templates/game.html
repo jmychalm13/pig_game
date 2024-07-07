@@ -4,15 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pig Game</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
   <h1>Pig Game</h1>
   <p>Number of players: {{ state['players'] }}</p>
   <div id="scores" class="scores">
-    <!-- Todo: Come back and make this a loop to account for multiple players -->
-    <p>Player 1 Score: <span id="player1-score">0</span></p>
-    <p>Player 2 Score: <span id="player2-score">0</span></p>
+    {% for player in range(state["players"]) %}
+      <p>Player {{player + 1}} Score: <span id="player{{player + 1}}-score">0</span></p>
+    {% endfor %}
   </div>
   <p>Current player: <span id="current-player">{{ state['current_player'] + 1 }}</span></p>
   <p>Current turn score: <span id="current-player-score">{{ state['current_score'] }}</span></p>
@@ -22,5 +23,6 @@
   <button id="end-turn-button">End Turn</button>
   <div id="game-output"></div>
   <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>
