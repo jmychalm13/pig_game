@@ -1,3 +1,29 @@
 .dice {
   border-radius: 10%;
 }
+
+        /* Override Materialize CSS input underline */
+.input-field input[type="text"]:focus,
+.input-field input[type="password"]:focus,
+.input-field input[type="email"]:focus,
+.input-field input[type="url"]:focus,
+.input-field input[type="tel"]:focus,
+.input-field input[type="number"]:focus,
+.input-field input[type="search"]:focus,
+.input-field textarea:focus {
+    border-bottom: 2px solid #e91e63 !important; /* Custom color and thickness for bottom border */
+    box-shadow: none !important; /* Remove default box-shadow */
+}
+
+.input-field {
+  color: #e91e63;
+  border-bottom: #e91e63;
+}
+
+.input-field input {
+  color: #e91e63;
+}
+
+.input-field .prefix.active {
+  color: #e91e63;
+}

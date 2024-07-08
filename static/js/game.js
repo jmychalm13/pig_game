@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
           endTurnButton.disabled = true;
         } else {
           console.log(data);
-          gameStatus.textContent = `Next player: Player ${data.next_player + 1}`;
+          // gameStatus.textContent = `Next player: Player ${data.next_player + 1}`;
           rollButton.disabled = false;
           endTurnButton.disabled = false;
           currentPlayerDisplay.textContent = data.current_player + 1;
