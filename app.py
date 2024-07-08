@@ -36,7 +36,7 @@ def end_turn(state):
     state["scores"][state["current_player"]] += state["current_score"]
     state["current_score"] = 0
     if state["scores"][state["current_player"]] >= MAX_SCORE:
-        state["winner"] = state["current_player"] + 1
+        state["winner"] = state["current_player"]
         return state
     else:
         state["current_player"] = (state["current_player"] + 1) % state["players"]
@@ -95,7 +95,7 @@ def end_turn_route():
             return jsonify(
                 {
                     "winner": state["winner"],
-                    "score": state["scores"][state["winner"] - 1],
+                    "score": state["scores"][state["winner"]],
                     "scores": state["scores"],
                 }
             )
