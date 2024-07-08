@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((response) => response.json())
       .then((data) => {
         if (data.winner !== undefined && data.winner !== null) {
-          gameStatus.textContent = `Player ${data.winner + 1} wins with a score of ${data.score}!`;
+          gameStatus.textContent = `Player ${data.winner + 1} wins with a score of ${data.scores[data.winner]}!`;
           rollButton.disabled = true;
           endTurnButton.disabled = true;
         } else {
