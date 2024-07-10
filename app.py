@@ -28,17 +28,31 @@ def roll_dice(state):
     value = roll()
     if value == 1:
         state["current_score"] = 0
-        state = end_turn(state)
+        state["turn_taken"][state["current_player"]] = True
+        state = advance_turn(state)
         return state, value
     else:
         state["current_score"] += value
         return state, value
 
 
+def advance_turn(state):
+    next_player = (state["current_player"] + 1) % state["players"]
+    state["turn_taken"][state["current_player"]] = True
+
+    while state["turn_taken"][next_player]:
+        next_player = (next_player + 1) % state["players"]
+        if next_player == state["current_player"]:
+            state["turn_taken"] = [False] * state["players"]
+            break
+
+    state["current_player"] = next_player
+    return state
+
+
 def end_turn(state):
     state["scores"][state["current_player"]] += state["current_score"]
     state["current_score"] = 0
-    state["turn_taken"][state["current_player"]] = True
 
     if (
         state["scores"][state["current_player"]] >= MAX_SCORE
@@ -51,14 +65,7 @@ def end_turn(state):
         if state["turns_left"] == 0:
             state["winner"] = determine_winner(state["scores"])
 
-    next_player = (state["current_player"] + 1) % state["players"]
-    while state["turn_taken"][next_player]:
-        next_player = (next_player + 1) % state["players"]
-        if next_player == state["current_player"]:
-            state["turn_taken"] = [False] * state["players"]
-            break
-
-    state["current_player"] = next_player
+    state = advance_turn(state)
     return state
 
 
