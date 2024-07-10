@@ -18,8 +18,9 @@ def start_game(players):
         "current_player": 0,
         "current_score": 0,
         "winner": None,
-        "final_turn": False,  # Flag to indicate the final turn of the game
-        "turns_left": players,  # Number of turns left in the final round
+        "final_turn": False,
+        "turns_left": players,
+        "turn_taken": [False] * players,
     }
 
 
@@ -27,7 +28,7 @@ def roll_dice(state):
     value = roll()
     if value == 1:
         state["current_score"] = 0
-        end_turn(state)
+        state = end_turn(state)
         return state, value
     else:
         state["current_score"] += value
@@ -37,37 +38,39 @@ def roll_dice(state):
 def end_turn(state):
     state["scores"][state["current_player"]] += state["current_score"]
     state["current_score"] = 0
+    state["turn_taken"][state["current_player"]] = True
 
-    if state["scores"][state["current_player"]] >= MAX_SCORE:
+    if (
+        state["scores"][state["current_player"]] >= MAX_SCORE
+        and not state["final_turn"]
+    ):
         state["final_turn"] = True
 
     if state["final_turn"]:
         state["turns_left"] -= 1
         if state["turns_left"] == 0:
             state["winner"] = determine_winner(state["scores"])
-    else:
-        state["current_player"] = (state["current_player"] + 1) % state["players"]
 
+    next_player = (state["current_player"] + 1) % state["players"]
+    while state["turn_taken"][next_player]:
+        next_player = (next_player + 1) % state["players"]
+        if next_player == state["current_player"]:
+            state["turn_taken"] = [False] * state["players"]
+            break
+
+    state["current_player"] = next_player
     return state
 
 
 def determine_winner(scores):
-    # Find scores that are above MAX_SCORE
     eligible_scores = [score for score in scores if score >= MAX_SCORE]
-
     if not eligible_scores:
-        return None  # No player has reached or exceeded MAX_SCORE
-
-    # Find the highest score among those who exceeded MAX_SCORE
+        return None
     max_score_above_max = max(eligible_scores)
-
-    # Find the player with the highest score above MAX_SCORE
     for i, score in enumerate(scores):
         if score == max_score_above_max:
-            print(f"i:{i} score:{score}")
             return i
-
-    return None  # Fallback, although it should not reach here in a well-formed game
+    return None
 
 
 @app.route("/")
