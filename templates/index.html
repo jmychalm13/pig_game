@@ -10,14 +10,14 @@
 </head>
 <body>
   <div class="body container">
-    <h1 class="center-align">Pig</h1>
+    <h1 class="purple-text center-align">Pig</h1>
     <form action="{{ url_for('start_game_route') }}" method="POST">
       <div class="input-field col s6">
         <i class="material-icons prefix pink-text">face</i>
         <label class="" for="players">Number of Players:</label>
         <input class="pink-text" type="number" id="players" name="players" min="2" max="10" required>
       </div>
-      <button class="pink waves-effect waves-effect-dark btn" type="submit">Start Game</button>
+      <button class="z-depth-3 pink waves-effect waves-effect-dark btn" type="submit">Start Game</button>
     </form>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
