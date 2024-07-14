@@ -9,20 +9,29 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <h1 class="purple-text">Pig Game</h1>
-  <p>Number of players: {{ state['players'] }}</p>
-  <div id="scores" class="scores">
-    {% for player in range(state["players"]) %}
-      <p>Player {{player + 1}} Score: <span id="player{{player + 1}}-score">0</span></p>
-    {% endfor %}
+  <div class="container">
+    <h1 class="purple-text center-align">Pig</h1>
+    <div class="row">
+      <div class="col s6 player-info">
+        <p>{{ state['players'] }} Players</p>
+        <p>Current player: <span id="current-player">{{ state['current_player'] + 1 }}</span></p>
+      </div>
+      <div id="scores" class="scores col s6 card-panel small purple white-text">
+        <h3 class="mb-0">Scores</h3>
+        <div class="row">
+          {% for player in range(state["players"]) %}
+            <p class="col s6">Player {{player + 1}} Score: <span id="player{{player + 1}}-score">0</span></p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <p>Current turn score: <span id="current-player-score">{{ state['current_score'] }}</span></p>
+    <div id="game-status"></div>
+      <img class="dice" id="dice-image" src="{{ url_for('static', filename='img/inverted-dice-1.png') }}" alt="Dice" width="100">
+      <button id="roll-button">Roll Dice</button>
+      <button id="end-turn-button">End Turn</button>
+    <div id="game-output"></div>
   </div>
-  <p>Current player: <span id="current-player">{{ state['current_player'] + 1 }}</span></p>
-  <p>Current turn score: <span id="current-player-score">{{ state['current_score'] }}</span></p>
-  <div id="game-status"></div>
-  <img class="dice" id="dice-image" src="{{ url_for('static', filename='img/inverted-dice-1.png') }}" alt="Dice" width="100">
-  <button id="roll-button">Roll Dice</button>
-  <button id="end-turn-button">End Turn</button>
-  <div id="game-output"></div>
   <script src="{{ url_for('static', filename='js/game.js') }}"></script>
 </body>
 </html>

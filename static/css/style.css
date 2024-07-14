@@ -1,5 +1,16 @@
-h1 {
-  text-shadow: 1px 1px 2px #e91e63, 0 0 1em purple, 0 0 0.2em purple;
+@import url('https://fonts.googleapis.com/css2?family=Concert+One&display=swap');
+
+html {
+  background: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%) no-repeat center center fixed;
+}
+
+body {
+  font-family: "Concert One", sans-serif;
+  /* text-shadow: 1px 1px 2px #e91e63, 0 0 1em purple, 0 0 0.2em purple; */
+}
+
+p {
+  font-size: 2rem;
 }
 
 .dice {
